@@ -1,4 +1,6 @@
-﻿using UnityEngine;
+﻿using System;
+using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class Movement : MonoBehaviour
 {
@@ -10,6 +12,7 @@ public class Movement : MonoBehaviour
     public Transform groundCheck;
     public float checkRadius;
     public LayerMask whatIsGround;
+    public LayerMask whatIsWater;
     public float jumpForce;
 
     bool isTouchingFront;
@@ -20,6 +23,10 @@ public class Movement : MonoBehaviour
     public float yWallForce;
     bool wallSliding;
     public float wallSlidingSpeed;
+    public float maxFallSpeed;
+    float fallSpeed;
+    bool lethal;
+    bool isInWater;
 
     public ParticleSystem dirtParticles;
 
@@ -33,6 +40,19 @@ public class Movement : MonoBehaviour
 
     private void Update()
     {
+        if (!isGrounded)
+		{
+            fallSpeed = Math.Abs(rb.velocity.y);
+
+            if (fallSpeed > maxFallSpeed)
+			{
+                lethal = true;
+			} else
+			{
+                lethal = false;
+			}
+		}
+
         float input = Input.GetAxisRaw("Horizontal");
         rb.velocity = new Vector2(input * speed, rb.velocity.y);
 
@@ -57,12 +77,17 @@ public class Movement : MonoBehaviour
 
         isGrounded = Physics2D.OverlapCircle(groundCheck.position, checkRadius, whatIsGround);
         isTouchingFront = Physics2D.OverlapCircle(frontCheck.position, checkRadius, whatIsGround);
+        isInWater = Physics2D.OverlapCircle(groundCheck.position, checkRadius, whatIsWater);
 
-        if (Input.GetKeyDown(KeyCode.Space) && isGrounded == true)
+        if (Input.GetKeyDown(KeyCode.Space) && isGrounded == true || Input.GetKeyDown(KeyCode.Space) && isInWater == true)
         {
             rb.velocity = Vector2.up * jumpForce;
         }
 
+        if (isGrounded && isInWater == false && lethal)
+		{
+            SceneManager.LoadScene("Game");
+		}
 
         if (isTouchingFront && !isGrounded && input != 0)
         {
