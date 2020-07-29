@@ -9,8 +9,9 @@ using UnityEngine.SceneManagement;
 
 public class SpikeTraps : MonoBehaviour
 {
-	private void OnTriggerEnter2D(Collider2D collision)
+    private void OnTriggerEnter2D(Collider2D collision)
 	{
-		SceneManager.LoadScene("Game");
-	}
+        var player = GameObject.FindGameObjectWithTag("Player").GetComponent<Movement>();
+        player.Dead();
+    }
 }
