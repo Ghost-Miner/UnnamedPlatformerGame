@@ -32,10 +32,15 @@ public class Movement : MonoBehaviour
 
     Animator anim;
 
+    public GameObject DeathScreen;
+
     private void Start()
     {
         rb = GetComponent<Rigidbody2D>();
         anim = GetComponent<Animator>();
+        var xCheck = PlayerPrefs.GetFloat("x", 0);
+        var yCheck = PlayerPrefs.GetFloat("y", 0);
+        gameObject.transform.position = new Vector3(xCheck, yCheck, 0);
     }
 
     private void Update()
@@ -86,7 +91,7 @@ public class Movement : MonoBehaviour
 
         if (isGrounded && isInWater == false && lethal)
 		{
-            SceneManager.LoadScene("Game");
+            Dead();
 		}
 
         if (isTouchingFront && !isGrounded && input != 0)
@@ -128,5 +133,10 @@ public class Movement : MonoBehaviour
     void SetWallJumpingToFalse()
     {
         wallJumping = false;
+    }
+
+    public void Dead()
+    {
+        DeathScreen.SetActive(true);
     }
 }
