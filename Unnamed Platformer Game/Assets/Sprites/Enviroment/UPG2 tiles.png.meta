@@ -35,6 +35,12 @@ TextureImporter:
   - first:
       213: 2856305526078641265
     second: UPG2 tiles_5
+  - first:
+      213: 2599472676705461596
+    second: UPG2 tiles_5
+  - first:
+      213: -8917220406523502204
+    second: UPG2 tiles_6
   externalObjects: {}
   serializedVersion: 11
   mipmaps:
@@ -165,8 +171,8 @@ TextureImporter:
       name: UPG2 tiles_2
       rect:
         serializedVersion: 2
-        x: 0
-        y: 46
+        x: 64
+        y: 78
         width: 32
         height: 32
       alignment: 0
@@ -186,7 +192,7 @@ TextureImporter:
       name: UPG2 tiles_3
       rect:
         serializedVersion: 2
-        x: 32
+        x: 0
         y: 46
         width: 32
         height: 32
@@ -207,8 +213,8 @@ TextureImporter:
       name: UPG2 tiles_4
       rect:
         serializedVersion: 2
-        x: 0
-        y: 14
+        x: 32
+        y: 46
         width: 32
         height: 32
       alignment: 0
@@ -228,6 +234,27 @@ TextureImporter:
       name: UPG2 tiles_5
       rect:
         serializedVersion: 2
+        x: 0
+        y: 14
+        width: 32
+        height: 32
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: c55ec5a70ae231420800000000000000
+      internalID: 2599472676705461596
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: UPG2 tiles_6
+      rect:
+        serializedVersion: 2
         x: 32
         y: 14
         width: 32
@@ -239,8 +266,8 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 17417eb1eb2a3a720800000000000000
-      internalID: 2856305526078641265
+      spriteID: 4816d45294baf3480800000000000000
+      internalID: -8917220406523502204
       vertices: []
       indices: 
       edges: []
