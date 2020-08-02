@@ -14,6 +14,9 @@ public class Movement : MonoBehaviour
     public LayerMask whatIsGround;
     public LayerMask whatIsWater;
     public float jumpForce;
+	public float raycastToGroundLength;
+	public int smooth;
+	Quaternion rot;
 
     bool isTouchingFront;
     public Transform frontCheck;
@@ -27,6 +30,7 @@ public class Movement : MonoBehaviour
     float fallSpeed;
     bool lethal;
     bool isInWater;
+	bool crouch = false;
 
     public ParticleSystem dirtParticles;
 
@@ -41,10 +45,12 @@ public class Movement : MonoBehaviour
         var xCheck = PlayerPrefs.GetFloat("x", 0);
         var yCheck = PlayerPrefs.GetFloat("y", 0);
         gameObject.transform.position = new Vector3(xCheck, yCheck, 0);
+		
     }
 
     private void Update()
     {
+		
         if (!isGrounded)
 		{
             fallSpeed = Math.Abs(rb.velocity.y);
@@ -80,16 +86,12 @@ public class Movement : MonoBehaviour
             //dirtParticles.Stop();
         }
 
-        isGrounded = Physics2D.OverlapCircle(groundCheck.position, checkRadius, whatIsGround);
-        isTouchingFront = Physics2D.OverlapCircle(frontCheck.position, checkRadius, whatIsGround);
-        isInWater = Physics2D.OverlapCircle(groundCheck.position, checkRadius, whatIsWater);
-
-        if (Input.GetKeyDown(KeyCode.Space) && isGrounded == true || Input.GetKeyDown(KeyCode.Space) && isInWater == true)
+        if (Input.GetButtonDown("Jump") && (isGrounded == true || isInWater == true))
         {
             rb.velocity = Vector2.up * jumpForce;
         }
 
-        if (isGrounded && isInWater == false && lethal)
+        if (isGrounded && !isInWater && lethal)
 		{
             Dead();
 		}
@@ -110,7 +112,7 @@ public class Movement : MonoBehaviour
             rb.velocity = new Vector2(rb.velocity.x, Mathf.Clamp(rb.velocity.y, -wallSlidingSpeed, float.MaxValue));
         }
 
-        if (Input.GetKeyDown(KeyCode.Space) && wallSliding)
+        if (Input.GetButtonDown("Jump") && wallSliding)
         {
             wallJumping = true;
             Invoke("SetWallJumpingToFalse", wallJumpTime);
@@ -120,9 +122,80 @@ public class Movement : MonoBehaviour
         {
             rb.velocity = new Vector2(xWallForce * -input, yWallForce);
         }
+		
+		//search>crouch
+		if (Input.GetButtonDown("Crouch"))
+		{
+			crouch = !crouch;
+			anim.SetBool("crouch", crouch);
+		}
+		
+		transform.rotation = Quaternion.Lerp(transform.rotation, rot, Time.deltaTime * smooth);              
 
 
     }
+	
+	void OnCollisionEnter2D(Collision2D collision)
+    {
+        GameObject boxCollider = collision.otherCollider.gameObject;
+		string boxColliderName = boxCollider.name;
+		
+		GameObject otherCollider = collision.gameObject;
+		string otherColliderName = boxCollider.name;
+		bool inWater = otherColliderName == "water";
+		
+		CollisionEvent(boxColliderName, true, inWater);
+		
+    }
+	
+	void OnCollisionExit2D(Collision2D collision)
+    {
+        GameObject boxCollider = collision.otherCollider.gameObject;
+		string boxColliderName = boxCollider.name;
+		
+		GameObject otherCollider = collision.gameObject;
+		bool inWater = otherCollider.name == "water";
+		
+		CollisionEvent(boxColliderName, false, inWater);
+		
+    }
+	
+	void CollisionEvent(string name, bool mode, bool inWater)
+	{
+		isInWater = inWater && mode;
+		switch(name)
+		{
+			case "Bottom":
+				isGrounded = mode;
+				
+				break;
+			case "Right":
+				isTouchingFront = mode;
+				break;
+		}
+	}
+	
+	void OnCollisionStay2D(Collision2D collision)
+	{
+		if(collision.gameObject.name == "Ground")
+		{
+			Vector2 pos = groundCheck.position;
+			int temp = 0;
+			Vector2 tempVec = new Vector2(0f,0f);
+			for (float x = -0.4f; x <=0.4; x+= 0.1f)
+			{
+				Vector2 offset = new Vector2(groundCheck.right.x,groundCheck.right.y)*x;
+				RaycastHit2D hit = Physics2D.Raycast(pos + offset, - Vector2.up, raycastToGroundLength, whatIsGround);
+				Debug.DrawRay(pos + offset, - Vector2.up *raycastToGroundLength, Color.green);
+				if(hit){
+					temp++;
+					tempVec += hit.normal;
+				}
+			}
+			rot = Quaternion.FromToRotation(transform.up, tempVec/temp) * transform.rotation;
+		}
+		
+	}
 
     void Flip()
     {
