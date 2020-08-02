@@ -15,7 +15,7 @@ public class Movement : MonoBehaviour
     public LayerMask whatIsWater;
     public float jumpForce;
 	public float raycastToGroundLength;
-	public int smooth;
+	public int smooth = 10;
 	Quaternion rot;
 
     bool isTouchingFront;
