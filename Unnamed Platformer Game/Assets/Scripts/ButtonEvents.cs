@@ -5,7 +5,6 @@ using UnityEngine.SceneManagement;
 
 public class ButtonEvents : MonoBehaviour
 {
-    // Start is called before the first frame update
     public void LoadScene(string SceneToLoad)
     {
         SceneManager.LoadScene(SceneToLoad);
@@ -19,5 +18,11 @@ public class ButtonEvents : MonoBehaviour
     public void ResetPlayerPrefs()
     {
         PlayerPrefs.DeleteAll();
+    }
+
+    public void QuitGame()
+    {
+        Debug.Log("Game quit");
+        Application.Quit();
     }
 }
