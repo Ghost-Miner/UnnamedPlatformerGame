@@ -25,4 +25,9 @@ public class ButtonEvents : MonoBehaviour
         Debug.Log("Game quit");
         Application.Quit();
     }
+    public void BackToMenu()
+    {
+        Debug.Log("Returning to menu");
+        SceneManager.LoadScene("MainMenu");
+    }
 }
