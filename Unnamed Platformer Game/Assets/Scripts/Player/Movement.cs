@@ -4,6 +4,7 @@ using UnityEngine.SceneManagement;
 
 public class Movement : MonoBehaviour
 {
+    #region Variables
     public float speed;
     Rigidbody2D rb;
     bool facingRight = true;
@@ -37,6 +38,7 @@ public class Movement : MonoBehaviour
     Animator anim;
 
     public GameObject DeathScreen;
+    #endregion
 
     private void Start()
     {
